@@ -5,7 +5,7 @@
 This is the websocket server behind the "[Try Hext in your Browser!](https://hext.thomastrapp.com)" section.
 
 
-Dependencies:
+## Dependencies
 
 * CMake
 * OpenSSL
@@ -15,7 +15,24 @@ Dependencies:
 * Testing: websocat, jq
 
 
-## Licensing
+## Build
+
+```
+cd build
+cmake -DCMAKE_BUILD_TYPE=Release ..
+ls -lh ./hextws
+```
+
+
+## Usage
+
+```
+./hextws <address> <port> <num_threads> \
+    <path-to-cert> <path-to-key> <path-to-dhparam>
+```
+
+
+## License
 
 All source code of this project is released under the Apache License v2.0.
 
