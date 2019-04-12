@@ -19,7 +19,7 @@ This is the websocket server behind the "[Try Hext in your Browser!](https://hex
 
 ```
 cd build
-cmake -DCMAKE_BUILD_TYPE=Release ..
+cmake -DCMAKE_BUILD_TYPE=Release -DBoost_NO_BOOST_CMAKE=On ..
 ls -lh ./hextws
 ```
 
