@@ -7,9 +7,6 @@ list(INSERT CMAKE_MODULE_PATH 0 ${PROJECT_SOURCE_DIR}/cmake)
 
 include(HextEnableWarnings)
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 find_package(Hext)
 find_package(Boost 1.70)
 find_package(Threads)
