@@ -28,22 +28,15 @@ add_executable(
   ${PROJECT_SOURCE_DIR}/ws/main.cpp)
 
 target_include_directories(
-  hextws SYSTEM
-    PRIVATE
-      $<BUILD_INTERFACE:${Boost_INCLUDE_DIRS}>
-      $<BUILD_INTERFACE:${OPENSSL_INCLUDE_DIR}>
-      $<BUILD_INTERFACE:${RapidJSON_INCLUDE_DIRS}>)
-target_include_directories(
   hextws
     PRIVATE
-      $<BUILD_INTERFACE:${HEXT_INCLUDE_DIR}>
       $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/ws>)
 
 target_link_libraries(
   hextws
-  ${HEXT_LIBRARY}
-  ${CMAKE_THREAD_LIBS_INIT}
-  ${OPENSSL_LIBRARIES})
+  hext::hext
+  Threads::Threads
+  OpenSSL::SSL)
 
 install(TARGETS hextws DESTINATION bin)
 
