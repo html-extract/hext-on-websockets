@@ -11,7 +11,7 @@ icase-quoted-regex that consists of three files:
   icase-quoted-regex.html
   icase-quoted-regex.expected
 To run this test case you would do the following:
-  $ $0 case/icase-quoted-regex.hext
+  $ $0 wss://localhost:8080 case/icase-quoted-regex.hext
 
 $0 will then look for the corresponding .html and .expected files of the same \
 name in the directory of icase-quoted-regex.hext. Then it will send a request \
@@ -19,7 +19,7 @@ to <endpoint> with the given Hext snippet and HTML document and compare the \
 result to icase-quoted-regex.expected.
 
 To run all blackbox tests in succession:
-  $ $0 case/*.hext
+  $ $0 wss://localhost:8080 case/*.hext
 HelpMessage
   exit
 }
