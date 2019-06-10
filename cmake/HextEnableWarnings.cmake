@@ -1,32 +1,42 @@
-# Enable reasonable warnings.
-
-# Clang
-IF(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-  ADD_DEFINITIONS("-Weverything" "-Wno-c++98-compat" "-Wno-padded"
-    "-Wno-documentation-unknown-command" "-Wno-documentation-html"
-    "-Wno-documentation" "-Wno-weak-vtables" "-Wno-switch-enum"
-    "-Wno-exit-time-destructors" "-Wno-global-constructors")
-ENDIF(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-
-# G++
-IF(CMAKE_COMPILER_IS_GNUCXX)
-  ADD_DEFINITIONS(
-    "-pedantic" "-pedantic-errors" "-Wall" "-Wcast-align" "-Wcast-qual"
-    "-Wchar-subscripts" "-Wcomment" "-Wconversion" "-Wctor-dtor-privacy"
-    "-Wdisabled-optimization" "-Weffc++" "-Wextra" "-Wfloat-equal"
-    "-Wformat=2" "-Wformat-nonliteral" "-Wformat-security" "-Wformat-y2k"
-    "-Wimport" "-Winit-self" "-Winvalid-pch" "-Wlogical-op"
-    "-Wlong-long" "-Wmissing-braces" "-Wmissing-field-initializers"
-    "-Wmissing-format-attribute" "-Wmissing-include-dirs"
-    "-Woverloaded-virtual" "-Wpacked" "-Wparentheses" "-Wpointer-arith"
-    "-Wredundant-decls" "-Wreturn-type" "-Wsequence-point" "-Wshadow"
-    "-Wsign-compare" "-Wsign-promo" "-Wstack-protector" "-Wstrict-aliasing=2"
-    "-Wstrict-null-sentinel" "-Wstrict-overflow" "-Wswitch"
-    "-Wtrigraphs" "-Wundef" "-Wuninitialized" "-Wunknown-pragmas"
-    "-Wunreachable-code" "-Wunused"
-    "-Wunused-function" "-Wunused-label" "-Wunused-parameter" "-Wunused-value"
-    "-Wunused-variable" "-Wvariadic-macros" "-Wvolatile-register-var"
-    "-Wwrite-strings" "-Wmissing-noreturn" "-Wsign-conversion"
+function(hext_enable_warnings_gnu)
+  target_compile_options(
+    ${ARGN}
+    "-Wall"
+    "-Wcast-align"
+    "-Wcast-qual"
+    "-Wconversion"
+    "-Wctor-dtor-privacy"
+    "-Wdisabled-optimization"
+    "-Weffc++"
+    "-Wextra"
+    "-Wfloat-equal"
+    "-Wformat=2"
+    "-Wimport"
+    "-Winvalid-pch"
+    "-Wlogical-op"
+    "-Wlong-long"
+    "-Wmissing-format-attribute"
+    "-Wmissing-include-dirs"
+    "-Wmissing-noreturn"
+    "-Woverloaded-virtual"
+    "-Wpacked"
+    "-Wpointer-arith"
+    "-Wredundant-decls"
+    "-Wshadow"
+    "-Wsign-conversion"
+    "-Wsign-promo"
+    "-Wstack-protector"
+    "-Wstrict-aliasing=2"
+    "-Wstrict-null-sentinel"
+    "-Wstrict-overflow"
+    "-Wswitch"
+    "-Wundef"
+    "-Wunreachable-code"
+    "-Wunused"
+    "-Wvariadic-macros"
+    "-Wwrite-strings"
+    "-pedantic"
+    "-pedantic-errors"
     # Unused switches:
     # "-Wswitch-enum": Listing every enum brings chaos, especially for GumboTag.
     # "-Wswitch-default": generated ragel code uses switch without default,
@@ -38,5 +48,30 @@ IF(CMAKE_COMPILER_IS_GNUCXX)
     #   Since it's only complaining about a missed optimization, this warning
     #   can safely be disabled.
   )
-ENDIF(CMAKE_COMPILER_IS_GNUCXX)
+endfunction()
+
+function(hext_enable_warnings_clang)
+  target_compile_options(
+    ${ARGN}
+    "-Weverything"
+    "-Wno-c++98-compat"
+    "-Wno-documentation"
+    "-Wno-documentation-html"
+    "-Wno-documentation-unknown-command"
+    "-Wno-exit-time-destructors"
+    "-Wno-global-constructors"
+    "-Wno-padded"
+    "-Wno-switch-enum"
+    "-Wno-weak-vtables")
+endfunction()
+
+function(hext_enable_warnings)
+  if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    hext_enable_warnings_clang(${ARGN})
+  endif()
+
+  if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    hext_enable_warnings_gnu(${ARGN})
+  endif()
+endfunction()
 

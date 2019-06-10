@@ -23,6 +23,7 @@ add_executable(
   ${PROJECT_SOURCE_DIR}/ws/Session.cpp
   ${PROJECT_SOURCE_DIR}/ws/SetupSSL.cpp
   ${PROJECT_SOURCE_DIR}/ws/main.cpp)
+hext_enable_warnings(hextws PRIVATE)
 
 target_include_directories(
   hextws
