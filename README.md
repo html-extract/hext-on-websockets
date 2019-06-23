@@ -11,7 +11,7 @@ This is the websocket server behind the "[Try Hext in your Browser!](https://hex
 * OpenSSL
 * Boost 1.70.0
 * RapidJSON
-* [Hext](https://github.com/thomastrapp/hext)
+* [Hext](https://github.com/html-extract/hext)
 * Testing: websocat, jq
 
 
