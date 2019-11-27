@@ -171,8 +171,8 @@ touch "$ws_input"
 ws_output="$(mktemp -u)"
 touch "$ws_output"
 tail -f "$ws_input" | websocat --text "$endpoint" >"$ws_output" &
-# kill websocat background process and remove temp files on exit
-trap "{ kill $! ; rm -f $ws_input $ws_output ; }" EXIT
+# kill background job and remove temp files on exit
+trap "{ { kill %1 && wait %1 ; } 2>/dev/null ; rm -f $ws_input $ws_output ; }" EXIT
 shift
 while [[ $# -gt 0 ]] ; do
   test_hext "$endpoint" "$ws_input" "$ws_output" "$1" || {
