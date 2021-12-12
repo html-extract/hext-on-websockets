@@ -8,6 +8,7 @@
 #include <boost/asio/ssl/context.hpp>
 #include <boost/asio/strand.hpp>
 
+#include <cstdint>
 #include <iostream>
 #include <memory>
 #include <string>
@@ -19,8 +20,10 @@ namespace ws {
 
 Listener::Listener(boost::asio::io_context& ioc,
                    boost::asio::ssl::context& ctx,
-                   boost::asio::ip::tcp::endpoint endpoint)
-: ioc_(ioc)
+                   boost::asio::ip::tcp::endpoint endpoint,
+                   std::uint64_t max_searches)
+: max_searches_(max_searches)
+, ioc_(ioc)
 , ctx_(ctx)
 , acceptor_(boost::asio::make_strand(ioc))
 {
@@ -72,7 +75,7 @@ void Listener::onAccept(boost::beast::error_code ec,
   if( ec )
     this->onFail(ec, "accept");
   else
-    std::make_shared<Session>(std::move(socket), this->ctx_)->run();
+    std::make_shared<Session>(std::move(socket), this->ctx_, this->max_searches_)->run();
 
   this->doAccept();
 }

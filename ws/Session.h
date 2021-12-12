@@ -7,6 +7,7 @@
 
 #include <boost/asio/ip/tcp.hpp>
 
+#include <cstdint>
 #include <cstdlib>
 #include <memory>
 
@@ -17,7 +18,10 @@ namespace ws {
 class Session : public std::enable_shared_from_this<Session>
 {
 public:
-  Session(boost::asio::ip::tcp::socket&& socket, boost::asio::ssl::context& ctx);
+  Session(
+      boost::asio::ip::tcp::socket&& socket,
+      boost::asio::ssl::context& ctx,
+      std::uint64_t max_searches);
   void run();
   void onHandshake(boost::beast::error_code ec);
   void onAccept(boost::beast::error_code ec);
@@ -28,6 +32,7 @@ public:
 private:
   void onFail(boost::beast::error_code ec, const char * what) const;
 
+  std::uint64_t max_searches_;
   boost::beast::websocket::stream<
     boost::beast::ssl_stream<boost::beast::tcp_stream>> ws_;
   boost::beast::flat_buffer buffer_;

@@ -16,10 +16,10 @@
 
 int main(int argc, char ** argv)
 {
-  if( argc != 7 )
+  if( argc != 8 )
   {
     std::cerr << "Usage: " << argv[0]
-              << " <address> <port> <num_threads> <path-to-cert> <path-to-key> <path-to-dhparam>\n";
+              << " <address> <port> <num_threads> <max-searches> <path-to-cert> <path-to-key> <path-to-dhparam>\n";
     return EXIT_FAILURE;
   }
 
@@ -28,17 +28,19 @@ int main(int argc, char ** argv)
   boost::asio::ssl::context ctx(boost::asio::ssl::context::tlsv12);
 
   {
-    const auto path_to_cert = std::string(argv[4]);
-    const auto path_to_key = std::string(argv[5]);
-    const auto path_to_dhparam = std::string(argv[6]);
+    const auto path_to_cert = std::string(argv[5]);
+    const auto path_to_key = std::string(argv[6]);
+    const auto path_to_dhparam = std::string(argv[7]);
     ws::SetupSSL(ctx, path_to_cert, path_to_key, path_to_dhparam);
   }
 
   const auto address = boost::asio::ip::make_address(argv[1]);
   const auto port = static_cast<unsigned short>(std::atoi(argv[2]));
+  std::uint64_t max_searches = std::stoull(argv[4]);
   std::make_shared<ws::Listener>(ioc,
                                  ctx,
-                                 boost::asio::ip::tcp::endpoint(address, port))
+                                 boost::asio::ip::tcp::endpoint(address, port),
+                                 max_searches)
     ->run();
 
   std::vector<std::thread> threads;

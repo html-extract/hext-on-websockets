@@ -22,8 +22,10 @@ namespace ws {
 
 
 Session::Session(boost::asio::ip::tcp::socket&& socket,
-                 boost::asio::ssl::context& ctx)
-: ws_(std::move(socket), ctx)
+                 boost::asio::ssl::context& ctx,
+                 std::uint64_t max_searches)
+: max_searches_(max_searches)
+, ws_(std::move(socket), ctx)
 , buffer_()
 {
 }
@@ -92,7 +94,10 @@ void Session::onRead(boost::beast::error_code ec,
   boost::asio::buffer_copy(boost::asio::buffer(data), this->buffer_.data());
 
   auto response = std::make_shared<std::string>(
-      ws::HandleRequest(const_cast<const char*>(data.data()), data.size()));
+      ws::HandleRequest(
+        const_cast<const char*>(data.data()),
+        data.size(),
+        this->max_searches_));
 
   this->ws_.async_write(boost::asio::buffer(*response),
                         boost::beast::bind_front_handler(

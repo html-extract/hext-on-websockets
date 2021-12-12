@@ -9,7 +9,7 @@ This is the websocket server behind the "[Try Hext in your Browser!](https://hex
 
 * CMake
 * OpenSSL
-* Boost 1.70.0
+* Boost
 * RapidJSON
 * [Hext](https://github.com/html-extract/hext)
 * Testing: websocat, jq
@@ -27,7 +27,7 @@ ls -lh ./hextws
 ## Usage
 
 ```
-./hextws <address> <port> <num_threads> \
+./hextws <address> <port> <num_threads> <max-searches> \
     <path-to-cert> <path-to-key> <path-to-dhparam>
 ```
 
