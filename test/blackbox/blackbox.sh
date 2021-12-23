@@ -138,9 +138,14 @@ test_hext() {
   } >&2
 
   local actual
-  actual=$(echo "$response" | jq -c '.result | .[]') || {
+  actual=$(echo "$response" | jq -c '.result | .[]' 2>/dev/null) || {
     perror_case "$t_case"
     perror "$endpoint failed for <$f_hext>" | pindent
+
+    local status=$(echo "$response" | jq -c '.status' 2>/dev/null) \
+      && echo "Status: $status" | pindent
+    local message=$(echo "$response" | jq -rc '.error' 2>/dev/null) \
+      && echo -e "Message: $message" | pindent
     return 1
   } >&2
 
