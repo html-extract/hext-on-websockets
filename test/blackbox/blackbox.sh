@@ -41,7 +41,7 @@ perror() {
 }
 
 
-for dependency in websocat jq ; do
+for dependency in websocat jq nc ; do
   hash $dependency >/dev/null 2>&1 || {
     perror "cannot execute '$dependency'" >&2
     exit 1
@@ -87,15 +87,13 @@ pindent() {
 #   nth-child.html
 # $ test_hext case/nth-child.hext
 test_hext() {
-  [[ $# -eq 4 ]] || {
-    perror "invalid usage. usage: <endpoint> <input-pipe> <output-pipe> <hext-file>" >&2
+  [[ $# -eq 3 ]] || {
+    perror "invalid usage. usage: <addr> <port> <hext-file>" >&2
     return 1
   }
 
-  endpoint="$1"
-  ws_input="$2"
-  ws_output="$3"
-  shift
+  addr="$1"
+  port="$2"
   shift
   shift
 
@@ -118,6 +116,7 @@ test_hext() {
     } >&2
   done
 
+  local hext_str
   # $(<"$f_hext") would remove trailing newlines
   # see https://stackoverflow.com/a/22607352
   hext_str="$(cat $f_hext; printf a)"
@@ -125,16 +124,20 @@ test_hext() {
   html_str="$(cat $f_html; printf a)"
   html_str="${html_str%a}"
 
-  truncate -s0 "$ws_output"
-  jq -n -c --arg hext "$hext_str" --arg html "$html_str" '[$hext,$html]' >>"$ws_input" || {
+  local request
+  request=$(jq -n -c \
+    --arg hext "$hext_str" \
+    --arg html "$html_str" \
+    '[$hext,$html]')
+
+  local response
+  response=$(echo "$request" | nc "$addr" "$port") || {
     perror_case "$t_case"
     perror "cannot send <$f_hext>" | pindent
     return 1
   } >&2
 
   local actual
-  local response
-  response=$(tail -f "$ws_output" | grep -a -m1 '$' | tr -d '\000')
   actual=$(echo "$response" | jq -c '.result | .[]') || {
     perror_case "$t_case"
     perror "$endpoint failed for <$f_hext>" | pindent
@@ -166,16 +169,20 @@ test_hext() {
 failure=0
 total=0
 endpoint="$1"
-ws_input="$(mktemp -u)"
-touch "$ws_input"
-ws_output="$(mktemp -u)"
-touch "$ws_output"
-tail -f "$ws_input" | websocat --text "$endpoint" >"$ws_output" &
-# kill background job and remove temp files on exit
-trap "{ { kill %1 && wait %1 ; } 2>/dev/null ; rm -f $ws_input $ws_output ; }" EXIT
+local_addr="127.0.0.1"
+local_port="1234"
+
+websocat --text \
+         --exit-on-eof \
+         tcp-listen:"$local_addr:$local_port" \
+         reuse-raw:"$endpoint" \
+         --max-messages-rev 1 &
+WS_PID=$!
+trap "{ kill $WS_PID 2>/dev/null ; }" EXIT
+
 shift
 while [[ $# -gt 0 ]] ; do
-  test_hext "$endpoint" "$ws_input" "$ws_output" "$1" || {
+  test_hext "$local_addr" "$local_port" "$1" || {
     failure=$(expr $failure + 1)
     echo >&2
   }
