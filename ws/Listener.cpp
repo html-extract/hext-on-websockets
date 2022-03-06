@@ -1,5 +1,6 @@
 #include "Listener.h"
 #include "Session.h"
+#include "WsBoostAsioHandlerLocation.h"
 
 #include <boost/beast/core.hpp>
 
@@ -63,6 +64,7 @@ void Listener::run() { this->doAccept(); }
 
 void Listener::doAccept()
 {
+  WS_BOOST_ASIO_HANDLER_LOCATION;
   this->acceptor_.async_accept(boost::asio::make_strand(this->ioc_),
                                boost::beast::bind_front_handler(
                                  &Listener::onAccept,
@@ -72,6 +74,7 @@ void Listener::doAccept()
 void Listener::onAccept(boost::beast::error_code ec,
                         boost::asio::ip::tcp::socket socket)
 {
+  WS_BOOST_ASIO_HANDLER_LOCATION;
   if( ec )
     this->onFail(ec, "accept");
   else

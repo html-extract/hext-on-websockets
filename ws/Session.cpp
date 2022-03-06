@@ -1,5 +1,6 @@
 #include "Session.h"
 #include "HandleRequest.h"
+#include "WsBoostAsioHandlerLocation.h"
 
 #include <boost/beast/core.hpp>
 #include <boost/beast/websocket.hpp>
@@ -44,6 +45,7 @@ void Session::run()
 
 void Session::onHandshake(boost::beast::error_code ec)
 {
+  WS_BOOST_ASIO_HANDLER_LOCATION;
   if( ec )
   {
     this->onFail(ec, "handshake");
@@ -62,6 +64,7 @@ void Session::onHandshake(boost::beast::error_code ec)
 
 void Session::onAccept(boost::beast::error_code ec)
 {
+  WS_BOOST_ASIO_HANDLER_LOCATION;
   if( ec )
   {
     this->onFail(ec, "accept");
@@ -82,6 +85,7 @@ void Session::doRead()
 void Session::onRead(boost::beast::error_code ec,
                      std::size_t /* bytes_transferred */)
 {
+  WS_BOOST_ASIO_HANDLER_LOCATION;
   if( ec == boost::beast::websocket::error::closed )
     return;
 
@@ -111,6 +115,7 @@ void Session::onRead(boost::beast::error_code ec,
 void Session::onWrite(boost::beast::error_code ec,
                       std::size_t /* bytes_transferred */)
 {
+  WS_BOOST_ASIO_HANDLER_LOCATION;
   if( ec )
   {
     this->onFail(ec, "write");

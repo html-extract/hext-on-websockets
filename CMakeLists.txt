@@ -8,7 +8,7 @@ list(INSERT CMAKE_MODULE_PATH 0 ${PROJECT_SOURCE_DIR}/cmake)
 include(HextEnableWarnings)
 
 find_package(Hext)
-find_package(Boost 1.70)
+find_package(Boost)
 find_package(Threads)
 find_package(RapidJSON)
 find_package(OpenSSL)
