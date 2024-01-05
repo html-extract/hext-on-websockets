@@ -10,7 +10,9 @@
 #include <boost/asio/strand.hpp>
 
 #include <cstdint>
+#ifdef HEXTWS_DEBUG
 #include <iostream>
+#endif
 #include <memory>
 #include <string>
 #include <utility>
@@ -83,9 +85,12 @@ void Listener::onAccept(boost::beast::error_code ec,
   this->doAccept();
 }
 
-void Listener::onFail(boost::beast::error_code ec, const char * what) const
+void Listener::onFail([[maybe_unused]] boost::beast::error_code ec,
+                      [[maybe_unused]] const char * what) const
 {
+#ifdef HEXTWS_DEBUG
   std::cerr << (std::string(what) + ": " + ec.message() + "\n");
+#endif
 }
 
 

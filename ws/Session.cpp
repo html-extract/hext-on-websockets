@@ -12,7 +12,9 @@
 
 #include <chrono>
 #include <cstdlib>
+#ifdef HEXTWS_DEBUG
 #include <iostream>
+#endif
 #include <memory>
 #include <string>
 #include <utility>
@@ -126,9 +128,12 @@ void Session::onWrite(boost::beast::error_code ec,
   this->doRead();
 }
 
-void Session::onFail(boost::beast::error_code ec, const char * what) const
+void Session::onFail([[maybe_unused]] boost::beast::error_code ec,
+                     [[maybe_unused]] const char * what) const
 {
+#ifdef HEXTWS_DEBUG
   std::cerr << (std::string(what) + ": " + ec.message() + "\n");
+#endif
 }
 
 

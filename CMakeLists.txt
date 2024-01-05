@@ -30,6 +30,11 @@ target_include_directories(
     PRIVATE
       $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/ws>)
 
+target_compile_definitions(
+  hextws
+    PRIVATE
+      "$<$<CONFIG:Debug>:HEXTWS_DEBUG>")
+
 target_link_libraries(
   hextws
   hext::hext
