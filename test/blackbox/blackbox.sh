@@ -20,6 +20,10 @@ result to icase-quoted-regex.expected.
 
 To run all blackbox tests in succession:
   $ $0 wss://localhost:8080 case/*.hext
+
+Environment options:
+  WS_WEBSOCAT_LOCAL_PORT, local port to use for websocat, default "1234"
+  WS_WEBSOCAT_FLAGS, arguments to pass to websocat, default ""
 HelpMessage
   exit
 }
@@ -175,9 +179,10 @@ failure=0
 total=0
 endpoint="$1"
 local_addr="127.0.0.1"
-local_port="1234"
+local_port="${WS_WEBSOCAT_LOCAL_PORT:=1234}"
 
 websocat --text \
+         $WS_WEBSOCAT_FLAGS \
          --exit-on-eof \
          tcp-listen:"$local_addr:$local_port" \
          reuse-raw:"$endpoint" \
