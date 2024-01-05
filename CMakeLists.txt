@@ -33,7 +33,8 @@ target_include_directories(
 target_compile_definitions(
   hextws
     PRIVATE
-      "$<$<CONFIG:Debug>:HEXTWS_DEBUG>")
+      "$<$<CONFIG:Debug>:HEXTWS_DEBUG>"
+      "$<$<CONFIG:Debug>:BOOST_ASIO_ENABLE_HANDLER_TRACKING=1>")
 
 target_link_libraries(
   hextws
