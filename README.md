@@ -12,6 +12,7 @@ This is the websocket server behind the "[Try Hext in your Browser!](https://hex
 * Boost
 * RapidJSON
 * [Hext](https://github.com/html-extract/hext)
+* Optional: libseccomp
 * Testing: websocat, jq
 
 
@@ -19,7 +20,15 @@ This is the websocket server behind the "[Try Hext in your Browser!](https://hex
 
 ```
 cd build
-cmake -DCMAKE_BUILD_TYPE=Release ..
+cmake -DCMAKE_BUILD_TYPE=Release .. && make -j8
+ls -lh ./hextws
+```
+
+Build with seccomp enabled (see the list of allowed system calls in [SetupSeccomp.cpp](ws/SetupSeccomp.cpp), YMMV):
+
+```
+cd build
+cmake -DCMAKE_BUILD_TYPE=Release -DHEXTWS_SECCOMP=On .. && make -j8
 ls -lh ./hextws
 ```
 
@@ -27,7 +36,7 @@ ls -lh ./hextws
 ## Usage
 
 ```
-./hextws <address> <port> <num_threads> <max-searches> \
+./hextws <address> <port> <num-threads> <max-searches> \
     <path-to-cert> <path-to-key> <path-to-dhparam>
 ```
 
