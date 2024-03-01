@@ -37,12 +37,9 @@ namespace ws {
 
 void SetupSeccomp()
 {
-  // RAII guard for seccomp_{init,release}
-  std::unique_ptr<
-    void,
-    decltype(&seccomp_release)> ctx(
-        seccomp_init(SCMP_ACT_KILL_PROCESS),
-        seccomp_release);
+  // scope guard for seccomp_{init,release}
+  using SeccompGuard = std::unique_ptr<void, decltype(&seccomp_release)>;
+  SeccompGuard ctx(seccomp_init(SCMP_ACT_KILL_PROCESS), seccomp_release);
 
   if( !ctx )
     throw SetupSeccompError("seccomp_init failed");
