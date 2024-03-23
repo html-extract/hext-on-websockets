@@ -52,6 +52,7 @@ void SetupSeccomp()
     WS_SYS_PAIR(epoll_wait),
     WS_SYS_PAIR(futex),
     WS_SYS_PAIR(getpid),
+    WS_SYS_PAIR(getrandom),
     WS_SYS_PAIR(madvise),
     WS_SYS_PAIR(mmap),
     WS_SYS_PAIR(mprotect),
@@ -60,6 +61,7 @@ void SetupSeccomp()
     WS_SYS_PAIR(recvmsg),
     WS_SYS_PAIR(rseq),
     WS_SYS_PAIR(sendmsg),
+    WS_SYS_PAIR(shutdown),
     WS_SYS_PAIR(timerfd_settime),
   };
 
