@@ -58,6 +58,7 @@ void SetupSeccomp()
     WS_SYS_PAIR(mprotect),
     WS_SYS_PAIR(munmap),
     WS_SYS_PAIR(read),
+    WS_SYS_PAIR(recvfrom),
     WS_SYS_PAIR(recvmsg),
     WS_SYS_PAIR(rseq),
     WS_SYS_PAIR(sendmsg),
