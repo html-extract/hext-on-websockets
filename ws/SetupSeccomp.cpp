@@ -56,6 +56,7 @@ void SetupSeccomp()
     WS_SYS_PAIR(madvise),
     WS_SYS_PAIR(mmap),
     WS_SYS_PAIR(mprotect),
+    WS_SYS_PAIR(mremap),
     WS_SYS_PAIR(munmap),
     WS_SYS_PAIR(read),
     WS_SYS_PAIR(recvfrom),
